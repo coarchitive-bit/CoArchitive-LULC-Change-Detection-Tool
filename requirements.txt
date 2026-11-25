@@ -1,0 +1,23 @@
+# Web platform
+streamlit>=1.41
+folium>=0.17
+streamlit-folium>=0.22
+plotly>=5.20
+
+# Satellite data acquisition (Planetary Computer STAC)
+pystac-client>=0.7
+planetary-computer>=1.0
+stackstac>=0.5
+xarray>=2024.1
+dask[array]>=2024.1
+rasterio>=1.3
+
+# AI / analysis
+numpy>=1.26
+pandas>=2.1
+scipy>=1.11
+scikit-learn>=1.4        # model auto-retrains if the saved one cannot be loaded
+joblib>=1.3
+pillow>=10
+matplotlib>=3.8
+reportlab>=4.0

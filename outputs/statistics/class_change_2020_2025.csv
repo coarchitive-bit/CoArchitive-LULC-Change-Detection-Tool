@@ -1,0 +1,5 @@
+class_id,class_name,area_2020_km2,area_2025_km2,gain_km2,loss_km2,net_km2,net_percent,significant_gain_km2,significant_loss_km2
+1,Built-up,99.664,98.815,5.507,6.356,-0.849,-0.85,4.771,5.121
+2,Vegetation,326.661,324.612,1.251,3.3,-2.049,-0.63,0.743,1.996
+3,Agriculture & open land,85.424,86.572,10.719,9.571,1.148,1.34,9.115,9.182
+4,Water,42.069,43.819,12.961,11.211,1.75,4.16,12.567,10.895

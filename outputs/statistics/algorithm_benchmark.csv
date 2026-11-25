@@ -1,0 +1,6 @@
+algorithm,overall_accuracy,kappa,macro_f1,runtime_s
+Random Forest,0.888,0.8373,0.8567,18.6
+Support Vector Machine,0.8817,0.8302,0.855,1.4
+Neural network (MLP),0.8801,0.8267,0.8525,29.5
+Gradient-boosted trees,0.8765,0.8213,0.8432,16.9
+K-Means (unsupervised),0.824,0.7445,0.7637,0.2

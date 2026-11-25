@@ -1,0 +1,125 @@
+fid,train_class,year,pixels,agreement,model_says,label
+5,1,2020,136,0.0,Vegetation,Built-up
+15,5,2020,81,0.0,Agriculture & open land,Scrub
+58,5,2020,95,0.0,Water,Scrub
+60,3,2020,17,0.0,Built-up,Agriculture
+129,6,2020,33,0.0,Built-up,Barren
+117,6,2020,19,0.0,Built-up,Barren
+118,6,2025,4,0.0,Built-up,Barren
+78,6,2025,4,0.0,Built-up,Barren
+103,1,2025,41,0.0,Agriculture & open land,Built-up
+119,6,2025,30,0.0,Built-up,Barren
+14,5,2020,245,0.004,Agriculture & open land,Scrub
+88,3,2025,37,0.027,Built-up,Agriculture
+122,6,2020,25,0.08,Vegetation,Barren
+132,5,2025,57,0.105,Agriculture & open land,Scrub
+126,6,2025,59,0.119,Built-up,Barren
+79,1,2025,23,0.174,Agriculture & open land,Built-up
+125,6,2020,43,0.279,Built-up,Barren
+59,3,2020,21,0.333,Vegetation,Agriculture
+120,6,2020,171,0.38,Built-up,Barren
+85,4,2025,15,0.4,Agriculture & open land,Water
+99,1,2025,7,0.429,Agriculture & open land,Built-up
+32,1,2020,9,0.444,Vegetation,Built-up
+46,1,2020,17,0.471,Agriculture & open land,Built-up
+40,1,2020,119,0.487,Vegetation,Built-up
+57,5,2020,255,0.502,Vegetation,Scrub
+6,1,2020,102,0.52,Built-up,Built-up
+49,1,2020,83,0.542,Built-up,Built-up
+97,1,2025,18,0.556,Built-up,Built-up
+74,2,2025,287,0.561,Vegetation,Tree cover
+18,1,2020,30,0.567,Built-up,Built-up
+124,6,2025,21,0.571,Agriculture & open land,Barren
+16,5,2020,112,0.58,Vegetation,Scrub
+67,1,2025,22,0.591,Built-up,Built-up
+123,6,2025,79,0.595,Agriculture & open land,Barren
+104,5,2025,33,0.606,Vegetation,Scrub
+115,2,2025,29,0.655,Vegetation,Tree cover
+56,3,2020,79,0.658,Agriculture & open land,Agriculture
+114,4,2025,85,0.706,Water,Water
+92,3,2025,15,0.733,Agriculture & open land,Agriculture
+55,3,2020,40,0.75,Agriculture & open land,Agriculture
+3,1,2020,4,0.75,Built-up,Built-up
+82,1,2025,467,0.775,Built-up,Built-up
+100,5,2025,25,0.8,Vegetation,Scrub
+130,6,2025,5,0.8,Agriculture & open land,Barren
+39,1,2020,16,0.812,Built-up,Built-up
+24,4,2020,54,0.815,Water,Water
+4,1,2020,12,0.833,Built-up,Built-up
+84,3,2025,500,0.838,Agriculture & open land,Agriculture
+66,2,2025,134,0.851,Vegetation,Tree cover
+72,5,2025,54,0.852,Vegetation,Scrub
+94,3,2020,70,0.857,Agriculture & open land,Agriculture
+81,1,2025,40,0.875,Built-up,Built-up
+77,5,2025,9,0.889,Vegetation,Scrub
+127,6,2025,70,0.9,Agriculture & open land,Barren
+17,1,2020,393,0.913,Built-up,Built-up
+109,1,2025,61,0.918,Built-up,Built-up
+11,1,2020,37,0.919,Built-up,Built-up
+22,4,2020,174,0.92,Water,Water
+13,1,2020,14,0.929,Built-up,Built-up
+73,1,2025,16,0.938,Built-up,Built-up
+91,3,2025,54,0.944,Agriculture & open land,Agriculture
+89,3,2025,54,0.944,Agriculture & open land,Agriculture
+54,3,2020,60,0.95,Agriculture & open land,Agriculture
+95,3,2025,63,0.952,Agriculture & open land,Agriculture
+8,5,2020,115,0.957,Vegetation,Scrub
+93,3,2020,186,0.957,Agriculture & open land,Agriculture
+30,1,2020,500,0.96,Built-up,Built-up
+111,1,2025,26,0.962,Built-up,Built-up
+10,1,2020,265,0.977,Built-up,Built-up
+35,2,2020,500,0.978,Vegetation,Tree cover
+108,1,2025,48,0.979,Built-up,Built-up
+23,4,2020,79,0.987,Water,Water
+105,1,2025,94,0.989,Built-up,Built-up
+50,2,2020,500,0.99,Vegetation,Tree cover
+63,2,2020,500,0.996,Vegetation,Tree cover
+48,2,2020,500,0.998,Vegetation,Tree cover
+34,2,2020,500,0.998,Vegetation,Tree cover
+51,2,2020,500,0.998,Vegetation,Tree cover
+33,2,2020,500,0.998,Vegetation,Tree cover
+38,5,2020,8,1.0,Vegetation,Scrub
+21,4,2020,500,1.0,Water,Water
+20,4,2020,500,1.0,Water,Water
+19,5,2020,22,1.0,Vegetation,Scrub
+9,1,2020,150,1.0,Built-up,Built-up
+2,1,2020,8,1.0,Built-up,Built-up
+12,1,2020,17,1.0,Built-up,Built-up
+1,1,2020,58,1.0,Built-up,Built-up
+7,1,2020,17,1.0,Built-up,Built-up
+28,4,2020,278,1.0,Water,Water
+25,4,2020,500,1.0,Water,Water
+36,5,2020,17,1.0,Vegetation,Scrub
+42,5,2020,144,1.0,Vegetation,Scrub
+47,2,2020,500,1.0,Vegetation,Tree cover
+27,4,2020,379,1.0,Water,Water
+26,4,2020,358,1.0,Water,Water
+31,1,2020,4,1.0,Built-up,Built-up
+68,4,2025,500,1.0,Water,Water
+65,3,2025,54,1.0,Agriculture & open land,Agriculture
+61,4,2020,88,1.0,Water,Water
+62,4,2020,286,1.0,Water,Water
+45,5,2020,28,1.0,Vegetation,Scrub
+44,1,2020,12,1.0,Built-up,Built-up
+43,4,2020,45,1.0,Water,Water
+37,1,2020,13,1.0,Built-up,Built-up
+41,5,2020,500,1.0,Vegetation,Scrub
+75,2,2025,500,1.0,Vegetation,Tree cover
+71,5,2025,23,1.0,Vegetation,Scrub
+70,5,2025,6,1.0,Vegetation,Scrub
+76,2,2025,500,1.0,Vegetation,Tree cover
+87,3,2025,49,1.0,Agriculture & open land,Agriculture
+80,1,2025,6,1.0,Built-up,Built-up
+83,1,2025,95,1.0,Built-up,Built-up
+102,1,2025,59,1.0,Built-up,Built-up
+101,5,2025,31,1.0,Vegetation,Scrub
+96,1,2025,12,1.0,Built-up,Built-up
+98,1,2025,14,1.0,Built-up,Built-up
+86,3,2025,53,1.0,Agriculture & open land,Agriculture
+106,1,2025,30,1.0,Built-up,Built-up
+107,4,2025,24,1.0,Water,Water
+110,2,2025,319,1.0,Vegetation,Tree cover
+116,2,2025,24,1.0,Vegetation,Tree cover
+113,2,2025,40,1.0,Vegetation,Tree cover
+112,1,2025,40,1.0,Built-up,Built-up
+131,6,2025,108,1.0,Agriculture & open land,Barren

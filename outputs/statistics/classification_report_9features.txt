@@ -1,0 +1,15 @@
+Overall Accuracy: 0.6449
+Balanced Accuracy: 0.5469
+Macro F1-score: 0.5380
+
+              precision    recall  f1-score   support
+
+    Built-up       0.71      0.64      0.67       543
+  Vegetation       0.65      0.87      0.74      1134
+ Agriculture       0.28      0.39      0.33       218
+       Water       0.92      0.69      0.79      1212
+      Barren       0.18      0.14      0.16       500
+
+    accuracy                           0.64      3607
+   macro avg       0.55      0.55      0.54      3607
+weighted avg       0.66      0.64      0.64      3607

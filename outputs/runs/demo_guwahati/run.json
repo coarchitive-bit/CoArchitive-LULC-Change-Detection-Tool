@@ -1,0 +1,221 @@
+{
+  "run_id": "demo_guwahati",
+  "name": "Guwahati demo (2020 vs 2025)",
+  "bbox": [
+    91.65,
+    26.05,
+    91.9,
+    26.25
+  ],
+  "source": "sentinel-2",
+  "max_cloud": 60,
+  "periods": {
+    "2020": [
+      "2020-01-01",
+      "2020-03-31"
+    ],
+    "2025": [
+      "2025-01-01",
+      "2025-03-31"
+    ]
+  },
+  "acquisition": {},
+  "created": "2026-11-25T14:52:53",
+  "demo": true,
+  "labels": [
+    "2020",
+    "2025"
+  ],
+  "overlays": {
+    "rgb_2020": {
+      "file": "rgb_2020.jpg",
+      "bounds": [
+        [
+          26.04787894989906,
+          91.64759867705243
+        ],
+        [
+          26.252241791957715,
+          91.90187871935974
+        ]
+      ]
+    },
+    "lulc_2020": {
+      "file": "lulc_2020.png",
+      "bounds": [
+        [
+          26.04787894989906,
+          91.64759867705243
+        ],
+        [
+          26.252241791957715,
+          91.90187871935974
+        ]
+      ]
+    },
+    "confidence_2020": {
+      "file": "confidence_2020.png",
+      "bounds": [
+        [
+          26.04787894989906,
+          91.64759867705243
+        ],
+        [
+          26.252241791957715,
+          91.90187871935974
+        ]
+      ]
+    },
+    "rgb_2025": {
+      "file": "rgb_2025.jpg",
+      "bounds": [
+        [
+          26.04787894989906,
+          91.64759867705243
+        ],
+        [
+          26.252241791957715,
+          91.90187871935974
+        ]
+      ]
+    },
+    "lulc_2025": {
+      "file": "lulc_2025.png",
+      "bounds": [
+        [
+          26.04787894989906,
+          91.64759867705243
+        ],
+        [
+          26.252241791957715,
+          91.90187871935974
+        ]
+      ]
+    },
+    "confidence_2025": {
+      "file": "confidence_2025.png",
+      "bounds": [
+        [
+          26.04787894989906,
+          91.64759867705243
+        ],
+        [
+          26.252241791957715,
+          91.90187871935974
+        ]
+      ]
+    },
+    "intensity": {
+      "file": "intensity.png",
+      "bounds": [
+        [
+          26.04787894989906,
+          91.64759867705243
+        ],
+        [
+          26.252241791957715,
+          91.90187871935974
+        ]
+      ]
+    },
+    "change": {
+      "file": "change.png",
+      "bounds": [
+        [
+          26.04787894989906,
+          91.64759867705243
+        ],
+        [
+          26.252241791957715,
+          91.90187871935974
+        ]
+      ]
+    }
+  },
+  "epsg": 32646,
+  "summary": {
+    "years": [
+      "2020",
+      "2025"
+    ],
+    "analysed_area_km2": 553.82,
+    "changed_area_km2_all": 30.44,
+    "changed_percent_all": 5.5,
+    "significant_change_km2": 27.2,
+    "significant_change_percent": 4.91,
+    "significant_patches": 758,
+    "rules": {
+      "min_confidence": 0.55,
+      "min_patch_pixels": 9,
+      "min_patch_ha": 0.09
+    },
+    "top_transitions": [
+      {
+        "from": "Agriculture & open land",
+        "to": "Water",
+        "code": 34,
+        "area_km2": 8.367
+      },
+      {
+        "from": "Water",
+        "to": "Agriculture & open land",
+        "code": 43,
+        "area_km2": 7.447
+      },
+      {
+        "from": "Built-up",
+        "to": "Water",
+        "code": 14,
+        "area_km2": 3.857
+      },
+      {
+        "from": "Water",
+        "to": "Built-up",
+        "code": 41,
+        "area_km2": 3.22
+      },
+      {
+        "from": "Built-up",
+        "to": "Agriculture & open land",
+        "code": 13,
+        "area_km2": 0.962
+      },
+      {
+        "from": "Vegetation",
+        "to": "Built-up",
+        "code": 21,
+        "area_km2": 0.948
+      },
+      {
+        "from": "Vegetation",
+        "to": "Agriculture & open land",
+        "code": 23,
+        "area_km2": 0.705
+      },
+      {
+        "from": "Agriculture & open land",
+        "to": "Built-up",
+        "code": 31,
+        "area_km2": 0.603
+      },
+      {
+        "from": "Vegetation",
+        "to": "Water",
+        "code": 24,
+        "area_km2": 0.343
+      },
+      {
+        "from": "Built-up",
+        "to": "Vegetation",
+        "code": 12,
+        "area_km2": 0.303
+      }
+    ],
+    "doubtful_change_km2": 2.58,
+    "priority_counts": {
+      "Low": 2933,
+      "Medium": 39,
+      "High": 5
+    }
+  }
+}

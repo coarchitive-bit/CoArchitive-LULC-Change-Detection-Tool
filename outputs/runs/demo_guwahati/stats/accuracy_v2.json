@@ -1,0 +1,71 @@
+{
+  "validation": "5-fold cross-validation grouped by training polygon",
+  "n_samples": 16716,
+  "n_polygons": 124,
+  "overall_accuracy": 0.8765,
+  "balanced_accuracy": 0.8516,
+  "kappa": 0.8213,
+  "macro_f1": 0.8432,
+  "classes": [
+    "Built-up",
+    "Vegetation",
+    "Agriculture & open land",
+    "Water"
+  ],
+  "per_class": [
+    {
+      "class": "Built-up",
+      "precision": 0.845,
+      "recall": 0.815,
+      "f1": 0.83,
+      "support": 3135
+    },
+    {
+      "class": "Vegetation",
+      "precision": 0.932,
+      "recall": 0.889,
+      "f1": 0.91,
+      "support": 7693
+    },
+    {
+      "class": "Agriculture & open land",
+      "precision": 0.631,
+      "recall": 0.718,
+      "f1": 0.672,
+      "support": 2023
+    },
+    {
+      "class": "Water",
+      "precision": 0.94,
+      "recall": 0.985,
+      "f1": 0.962,
+      "support": 3865
+    }
+  ],
+  "confusion_matrix": [
+    [
+      2554,
+      266,
+      315,
+      0
+    ],
+    [
+      96,
+      6838,
+      523,
+      236
+    ],
+    [
+      372,
+      189,
+      1453,
+      9
+    ],
+    [
+      0,
+      47,
+      12,
+      3806
+    ]
+  ]
+}

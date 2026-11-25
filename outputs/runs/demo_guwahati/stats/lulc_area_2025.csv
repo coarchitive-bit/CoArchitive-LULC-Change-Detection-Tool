@@ -1,0 +1,5 @@
+class_id,class_name,pixels,area_km2,percent
+1,Built-up,1021198,102.12,18.08
+2,Vegetation,3282832,328.283,58.13
+3,Agriculture & open land,903547,90.355,16.0
+4,Water,439463,43.946,7.78
