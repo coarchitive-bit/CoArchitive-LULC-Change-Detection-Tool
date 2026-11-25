@@ -8,6 +8,7 @@ Run locally:   streamlit run app.py
 import hashlib
 import io
 import json
+import os
 import uuid
 import zipfile
 from datetime import date
@@ -30,7 +31,12 @@ st.set_page_config(page_title="NESFIC-D-21  LULC change intelligence", page_icon
                    layout="wide", initial_sidebar_state="collapsed")
 
 INK, TEAL, GOLD, RAIL = "#13232B", "#0F6B5C", "#B08D57", "#13232B"
-MAX_AREA_KM2 = 800
+# Streamlit Community Cloud gives ~1 GB RAM. Live fetches above this size can crash the app.
+# Raise it only if your host has more memory (or set the MAX_AREA_KM2 environment variable).
+MAX_AREA_KM2 = int(os.environ.get("MAX_AREA_KM2", 100))
+DEMO_NAME = "Guwahati (demo area)"
+# Only used to centre the map / fill the coordinate boxes before the user picks an area
+PLACEHOLDER_BBOX = [92.65, 26.30, 92.70, 26.35]
 MAP_H = 600
 
 # -------------------------------------------------
@@ -128,8 +134,9 @@ div[data-testid="stTooltipContent"] *, div[data-baseweb="tooltip"] * {{ color:#F
 ss = st.session_state
 ss.setdefault("tool", "area")
 ss.setdefault("sid", uuid.uuid4().hex[:10])
-ss.setdefault("bbox", list(AOI_BBOX))
-ss.setdefault("area_name", "Guwahati (demo area)")
+ss.setdefault("bbox", list(PLACEHOLDER_BBOX))
+ss.setdefault("aoi_set", False)   # False until the user picks / draws / types an area
+ss.setdefault("area_name", "No area selected")
 ss.setdefault("fetched", {})        # label -> {"refl","geo","info","layer","period"}
 ss.setdefault("run_id", None)
 ss.setdefault("basemap", "Satellite")
@@ -183,6 +190,10 @@ def area_km2(b):
     import math
     w, s, e, n = b
     return abs(e - w) * 111.32 * math.cos(math.radians((s + n) / 2)) * abs(n - s) * 110.57
+
+
+def is_demo_area():
+    return bool(ss.aoi_set) and [round(x, 4) for x in ss.bbox] == [round(x, 4) for x in AOI_BBOX]
 
 
 def current_run():
@@ -344,14 +355,27 @@ with panel_col:
         # ---------------- AREA ----------------
         if ss.tool == "area":
             panel_head("Area of interest",
-                       "Choose where to analyse. The Guwahati demo area loads instantly; any other "
-                       "area in Assam is fetched live.")
+                       "Draw a small area with the pencil tool on the map, pick a preset or type coordinates. "
+                       "The Guwahati demo loads from files bundled with the app (no live download).")
+            if st.button("Load Guwahati demo", icon=":material/play_circle:", use_container_width=True,
+                         help="Opens the precomputed Guwahati 2020 → 2025 sample from local files. "
+                              "Nothing is downloaded and no heavy processing runs."):
+                ss.bbox, ss.area_name, ss.aoi_set = list(AOI_BBOX), DEMO_NAME, True
+                ss.fetched = {}
+                if any(r["run_id"] == "demo_guwahati" for r in list_runs()):
+                    ss.run_id = "demo_guwahati"
+                    ss.vis.update({"lulc_2025": True, "priority": True})
+                    ss.tool = "results"
+                else:
+                    ss.run_id, ss.tool = None, "fetch"
+                st.rerun()
             preset = st.selectbox("Preset area", list(PRESETS), index=list(PRESETS).index(
                 ss.area_name) if ss.area_name in PRESETS else 3,
                 help="Ready-made study areas. Pick 'Custom' to draw a rectangle on the map "
-                     "(rectangle tool, top left of the map) or type coordinates below.")
-            if PRESETS[preset] and PRESETS[preset] != ss.bbox:
-                ss.bbox, ss.area_name = PRESETS[preset], preset
+                     "(pencil tool, top left of the map) or type coordinates below.")
+            if PRESETS[preset] and (PRESETS[preset] != ss.bbox or not ss.aoi_set):
+                ss.bbox, ss.area_name, ss.aoi_set = PRESETS[preset], preset, True
+                ss.fetched, ss.run_id = {}, None
                 st.rerun()
             st.markdown('<div class="gc-step">Bounding box (WGS84)</div>', unsafe_allow_html=True)
             c1, c2 = st.columns(2)
@@ -365,19 +389,25 @@ with panel_col:
                                 help="Northern latitude in decimal degrees.")
             if st.button("Apply coordinates", icon=":material/check:", use_container_width=True,
                          help="Use the typed bounding box as the area of interest."):
-                ss.bbox, ss.area_name = [w, s, e, n], "Custom (draw or type)"
+                ss.bbox, ss.area_name, ss.aoi_set = [w, s, e, n], "Custom (draw or type)", True
+                ss.fetched, ss.run_id = {}, None
                 st.rerun()
             a = area_km2(ss.bbox)
-            st.markdown(f'<div class="gc-card" data-tip="Area of the current bounding box"><div class="h">'
-                        f'{a:,.0f} km²</div><div class="d">{ss.area_name} · '
-                        f'{ss.bbox[0]:.3f}, {ss.bbox[1]:.3f} → {ss.bbox[2]:.3f}, {ss.bbox[3]:.3f}</div></div>',
-                        unsafe_allow_html=True)
-            if a > MAX_AREA_KM2:
-                st.warning(f"Live runs are limited to {MAX_AREA_KM2} km². Larger areas run "
-                           "tile-by-tile in the state-wide engine (see Scale-up).")
-            st.caption("Tip: use the rectangle tool on the map to draw a new area.")
+            if ss.aoi_set:
+                st.markdown(f'<div class="gc-card" data-tip="Area of the current bounding box"><div class="h">'
+                            f'{a:,.0f} km²</div><div class="d">{ss.area_name} · '
+                            f'{ss.bbox[0]:.3f}, {ss.bbox[1]:.3f} → {ss.bbox[2]:.3f}, {ss.bbox[3]:.3f}</div></div>',
+                            unsafe_allow_html=True)
+                if a > MAX_AREA_KM2 and not is_demo_area():
+                    st.warning(f"Live runs are limited to {MAX_AREA_KM2} km². Draw a smaller area, or use the "
+                               "Guwahati demo. Larger areas run tile-by-tile in the state-wide engine (see Scale-up).")
+            else:
+                st.markdown('<div class="gc-empty">No area selected yet. Draw one with the pencil tool on the '
+                            'map, pick a preset, or load the Guwahati demo.</div>', unsafe_allow_html=True)
+            st.caption("Tip: use the pencil tool on the map to draw a new area.")
             if st.button("Next: fetch imagery", icon=":material/arrow_forward:", type="primary",
-                         use_container_width=True, help="Go to Step 2 - fetch satellite imagery."):
+                         use_container_width=True, disabled=not ss.aoi_set,
+                         help="Go to Step 2 - fetch satellite imagery."):
                 ss.tool = "fetch"
                 st.rerun()
 
@@ -417,10 +447,17 @@ with panel_col:
             scenes = c2.slider("Scenes", 3, 20, 8,
                                help="Number of least-cloudy scenes combined into each median composite. "
                                     "Fewer scenes = faster download.")
-            use_cache = st.toggle("Use bundled demo imagery (offline)", value=False,
+            use_cache = st.toggle("Use bundled demo imagery (offline)", value=is_demo_area(),
                                   help="On: Guwahati 2020/2025 dry-season composites load instantly from the "
                                        "app. Off: always download live from the Sentinel-2 / Landsat archives.")
-            ok = len(periods) == 2 and area_km2(ss.bbox) <= MAX_AREA_KM2
+            demo_offline = use_cache and is_demo_area()
+            too_big = area_km2(ss.bbox) > MAX_AREA_KM2 and not demo_offline
+            ok = ss.aoi_set and len(periods) == 2 and not too_big
+            if not ss.aoi_set:
+                st.info("Select an area first (step 1).")
+            elif too_big:
+                st.warning(f"Area is {area_km2(ss.bbox):,.0f} km². Live fetches are limited to "
+                           f"{MAX_AREA_KM2} km² on this server. Draw a smaller area.")
             if len(periods) < 2:
                 st.warning("Choose two different years.")
             if st.button("Fetch imagery", icon=":material/cloud_download:", type="primary",
@@ -665,8 +702,9 @@ with panel_col:
 with map_col:
     bb = ss.bbox
     scale_view = ss.tool == "scale"
-    m = folium.Map(location=[26.2, 92.9] if scale_view else [(bb[1] + bb[3]) / 2, (bb[0] + bb[2]) / 2],
-                   zoom_start=7 if scale_view else 11, tiles=None, control_scale=True, prefer_canvas=True)
+    overview = scale_view or not ss.aoi_set
+    m = folium.Map(location=[26.2, 92.9] if overview else [(bb[1] + bb[3]) / 2, (bb[0] + bb[2]) / 2],
+                   zoom_start=7 if overview else 11, tiles=None, control_scale=True, prefer_canvas=True)
     m.get_root().header.add_child(folium.Element("""
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -694,7 +732,17 @@ html, body, .folium-map, .leaflet-container { height: 100vh !important; margin: 
 .leaflet-control-mouseposition { font-size: 10px !important; background: rgba(255,255,255,.75) !important;
   border-radius: 8px; padding: 2px 8px !important; }
 .leaflet-draw-toolbar a { border-radius: 0 !important; }
-</style>"""))
+/* pencil icon for the draw-area tool */
+.leaflet-draw-toolbar a.leaflet-draw-draw-rectangle {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%2313232B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 20h9'/%3E%3Cpath d='M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z'/%3E%3C/svg%3E") !important;
+  background-size: 18px 18px !important; background-position: center !important; background-repeat: no-repeat !important; }
+</style>
+<script>
+window.addEventListener('load', function () {
+  var a = document.querySelector('.leaflet-draw-draw-rectangle');
+  if (a) { a.title = 'Draw area of interest (pencil)'; }
+});
+</script>"""))
     for name, (tiles, attr) in BASEMAPS.items():
         folium.TileLayer(tiles, attr=attr, name=f"Basemap · {name}", overlay=False,
                          show=(name == ss.basemap)).add_to(m)
@@ -742,15 +790,16 @@ html, body, .folium-map, .leaflet-container { height: 100vh !important; margin: 
                              tooltip=f'Tile {t["tile_id"]} · EPSG:{t["epsg"]}').add_to(fgt)
         fgt.add_to(m)
 
-    folium.Rectangle([[bb[1], bb[0]], [bb[3], bb[2]]], color=GOLD, weight=2, dash_array="6 4",
-                     fill=False, tooltip=f"Area of interest · {area_km2(bb):,.0f} km²").add_to(m)
+    if ss.aoi_set:
+        folium.Rectangle([[bb[1], bb[0]], [bb[3], bb[2]]], color=GOLD, weight=2, dash_array="6 4",
+                         fill=False, tooltip=f"Area of interest · {area_km2(bb):,.0f} km²").add_to(m)
     Draw(draw_options={"polyline": False, "polygon": False, "circle": False, "marker": False,
                        "circlemarker": False, "rectangle": {"shapeOptions": {"color": TEAL}}},
          edit_options={"edit": False, "remove": False}, position="topleft").add_to(m)
     Fullscreen(position="topleft", title="Full screen", title_cancel="Exit full screen").add_to(m)
     MousePosition(position="bottomleft", num_digits=4, prefix="Lat/Lon").add_to(m)
     folium.LayerControl(position="topright", collapsed=False).add_to(m)
-    if ss.tool != "scale":
+    if ss.tool != "scale" and ss.aoi_set:
         m.fit_bounds([[bb[1], bb[0]], [bb[3], bb[2]]])
 
     with st.container(key="mapbox"):
@@ -765,12 +814,13 @@ html, body, .folium-map, .leaflet-container { height: 100vh !important; margin: 
             lons, lats = [p[0] for p in coords], [p[1] for p in coords]
             ss.bbox = [round(min(lons), 4), round(min(lats), 4), round(max(lons), 4), round(max(lats), 4)]
             ss.area_name = "Custom (draw or type)"
+            ss.aoi_set = True
             ss.fetched, ss.run_id, ss.tool = {}, None, "area"
             st.rerun()
 
+    area_txt = f"{area_km2(bb):,.0f} km²" if ss.aoi_set else "draw an area to begin"
     n_layers = len(ss.fetched) + (len(run["overlays"]) if run else 0)
     st.markdown(f'<div class="gc-status"><span data-tip="Current area of interest"><b>{ss.area_name}</b> · '
-                f'{area_km2(bb):,.0f} km²</span><span data-tip="Layers available in the layer switcher">'
+                f'{area_txt}</span><span data-tip="Layers available in the layer switcher">'
                 f'{n_layers} data layers</span><span data-tip="Prototype prepared by CoArchitive Pvt. Ltd.">NESFIC-D-21 prototype · by '
                 f'<b>CoArchitive Pvt. Ltd.</b></span></div>', unsafe_allow_html=True)
-
