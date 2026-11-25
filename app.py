@@ -37,6 +37,8 @@ MAX_AREA_KM2 = int(os.environ.get("MAX_AREA_KM2", 100))
 DEMO_NAME = "Guwahati (demo area)"
 # Only used to centre the map / fill the coordinate boxes before the user picks an area
 PLACEHOLDER_BBOX = [92.65, 26.30, 92.70, 26.35]
+DEFAULT_CENTER = [26.15, 91.77]   # Guwahati: map view only, NOT a selected area
+DEFAULT_ZOOM = 13                 # ~15 km across; use 14 for ~8 km
 MAP_H = 600
 
 # -------------------------------------------------
@@ -357,18 +359,6 @@ with panel_col:
             panel_head("Area of interest",
                        "Draw a small area with the pencil tool on the map, pick a preset or type coordinates. "
                        "The Guwahati demo loads from files bundled with the app (no live download).")
-            if st.button("Load Guwahati demo", icon=":material/play_circle:", use_container_width=True,
-                         help="Opens the precomputed Guwahati 2020 → 2025 sample from local files. "
-                              "Nothing is downloaded and no heavy processing runs."):
-                ss.bbox, ss.area_name, ss.aoi_set = list(AOI_BBOX), DEMO_NAME, True
-                ss.fetched = {}
-                if any(r["run_id"] == "demo_guwahati" for r in list_runs()):
-                    ss.run_id = "demo_guwahati"
-                    ss.vis.update({"lulc_2025": True, "priority": True})
-                    ss.tool = "results"
-                else:
-                    ss.run_id, ss.tool = None, "fetch"
-                st.rerun()
             preset = st.selectbox("Preset area", list(PRESETS), index=list(PRESETS).index(
                 ss.area_name) if ss.area_name in PRESETS else 3,
                 help="Ready-made study areas. Pick 'Custom' to draw a rectangle on the map "
@@ -409,6 +399,19 @@ with panel_col:
                          use_container_width=True, disabled=not ss.aoi_set,
                          help="Go to Step 2 - fetch satellite imagery."):
                 ss.tool = "fetch"
+                st.rerun()
+            st.markdown('<div class="gc-step">Or try the demo</div>', unsafe_allow_html=True)
+            if st.button("Load Guwahati demo", icon=":material/play_circle:", use_container_width=True,
+                         help="Opens the precomputed Guwahati 2020 → 2025 sample from local files. "
+                              "Nothing is downloaded and no heavy processing runs."):
+                ss.bbox, ss.area_name, ss.aoi_set = list(AOI_BBOX), DEMO_NAME, True
+                ss.fetched = {}
+                if any(r["run_id"] == "demo_guwahati" for r in list_runs()):
+                    ss.run_id = "demo_guwahati"
+                    ss.vis.update({"lulc_2025": True, "priority": True})
+                    ss.tool = "results"
+                else:
+                    ss.run_id, ss.tool = None, "fetch"
                 st.rerun()
 
         # ---------------- FETCH ----------------
@@ -702,9 +705,14 @@ with panel_col:
 with map_col:
     bb = ss.bbox
     scale_view = ss.tool == "scale"
-    overview = scale_view or not ss.aoi_set
-    m = folium.Map(location=[26.2, 92.9] if overview else [(bb[1] + bb[3]) / 2, (bb[0] + bb[2]) / 2],
-                   zoom_start=7 if overview else 11, tiles=None, control_scale=True, prefer_canvas=True)
+    if scale_view:
+        view_loc, view_zoom = [26.2, 92.9], 7
+    elif not ss.aoi_set:
+        view_loc, view_zoom = DEFAULT_CENTER, DEFAULT_ZOOM
+    else:
+        view_loc, view_zoom = [(bb[1] + bb[3]) / 2, (bb[0] + bb[2]) / 2], 11
+    m = folium.Map(location=view_loc,
+                   zoom_start=view_zoom, tiles=None, control_scale=True, prefer_canvas=True)
     m.get_root().header.add_child(folium.Element("""
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -824,3 +832,4 @@ window.addEventListener('load', function () {
                 f'{area_txt}</span><span data-tip="Layers available in the layer switcher">'
                 f'{n_layers} data layers</span><span data-tip="Prototype prepared by CoArchitive Pvt. Ltd.">NESFIC-D-21 prototype · by '
                 f'<b>CoArchitive Pvt. Ltd.</b></span></div>', unsafe_allow_html=True)
+
